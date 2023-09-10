@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Test Suite</title>
+<link rel="stylesheet" href="css/qunit-2.19.4.css">
+<script src="js/main.js"></script>
+  
+  
+  
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script src="js/qunit-2.19.4.js"></script>
+
+
+  <script type="text/javascript">
+
+
+     QUnit.module('Einfache Demonstration', function() {
+
+        QUnit.test('two numbers', function(assert) {
+          assert.equal(1+2, 3);
+        });
+        
+        
+        QUnit.test('variables', function(assert) {
+          var x = 17;
+          var y = 3;
+
+          assert.equal(x-y, 14);
+          y++;
+          assert.equal(x-y, 13);
+          
+        });
+        
+    
+        QUnit.test('variables part 2', function(assert) {
+          var x = 104;
+          var y = x*x;
+          
+          var z = Math.sqrt(y);
+          
+          assert.equal(x,z);
+        });
+        
+        
+        QUnit.test('variables part 3', function(assert) {
+          var x = "blub";
+          var y = x+x;
+          
+          
+          assert.equal(y,"blubblub");
+        });
+
+
+        
+      });
+
+
+    
+
+
+     QUnit.module('Patient', function() {
+
+        QUnit.test('getter-Methods', function(assert) {
+          var p1 = new Patient("Anne","Arnold");
+          var p2 = new Patient("Bernhard", "Bogus");
+          var p3 = new Patient("Carl", "Codemaster");
+          
+          //Test 1-3: getName()
+          assert.equal(p1.getName(), "Anne");
+          assert.equal(p2.getName(), "Bernhard");
+          assert.equal(p3.getName(), "Carl");
+
+          //Test 4-6: getSurname()
+          assert.equal(p1.getSurname(), "Arnold");
+          assert.equal(p2.getSurname(), "Bogus");
+          assert.equal(p3.getSurname(), "Codemaster");
+
+          //Test 7-9 toString()
+          assert.equal(p1.toString(), "Patient: Anne Arnold");
+          assert.equal(p2.toString(), "Patient: Bernhard Bogus");
+          assert.equal(p3.toString(), "Patient: Carl Codemaster");
+        });
+        
+      });
+
+
+
+     QUnit.module('WaitingList', function() {
+
+        QUnit.test('Anzahl', function(assert) {
+          var p1 = new Patient("Anne","Arnold");
+          var p2 = new Patient("Bernhard", "Bogus");
+          var p3 = new Patient("Carl", "Codemaster");
+          
+          var l = new WaitingList();
+          
+          //Test 1-4: pushPatient(p)
+          assert.equal(l.getNumberOfWaitingPatients(), 0);
+          
+          l.pushPatient(p1);
+          assert.equal(l.getNumberOfWaitingPatients(), 1);
+          
+          l.pushPatient(p2);
+          assert.equal(l.getNumberOfWaitingPatients(), 2);
+          
+          l.pushPatient(p3);
+          assert.equal(l.getNumberOfWaitingPatients(), 3);
+
+          //Test 5-6 shiftPatient();
+          l.shiftPatient();
+          assert.equal(l.getNumberOfWaitingPatients(), 2);
+          
+          l.shiftPatient();
+          assert.equal(l.getNumberOfWaitingPatients(), 1);
+
+          //Test 7 shiftPatient() und pushPatient(p) combined
+          l.shiftPatient();
+          l.pushPatient(p1);
+          l.shiftPatient();
+          l.pushPatient(p2);
+          assert.equal(l.getNumberOfWaitingPatients(), 1);
+        });
+        
+        QUnit.test('pushPatient()', function(assert) {
+          var p1 = new Patient("Anne","Arnold");
+          var p2 = new Patient("Bernhard", "Bogus");
+          var p3 = new Patient("Carl", "Codemaster");
+          
+          var l = new WaitingList();
+          
+          //Test 1-6: pushPatient(p)
+          l.pushPatient(p1);
+          assert.equal(l._waitingPatients[0].getName() + " " + l._waitingPatients[0].getSurname(), "Anne Arnold");
+          
+          l.pushPatient(p2);
+          assert.equal(l._waitingPatients[0].getName() + " " + l._waitingPatients[0].getSurname(), "Anne Arnold");
+          assert.equal(l._waitingPatients[1].getName() + " " + l._waitingPatients[1].getSurname(), "Bernhard Bogus");
+          
+          l.pushPatient(p3);
+          assert.equal(l._waitingPatients[0].getName() + " " + l._waitingPatients[0].getSurname(), "Anne Arnold");
+          assert.equal(l._waitingPatients[1].getName() + " " + l._waitingPatients[1].getSurname(), "Bernhard Bogus");
+          assert.equal(l._waitingPatients[2].getName() + " " + l._waitingPatients[2].getSurname(), "Carl Codemaster");
+        });
+
+        QUnit.test('shiftPatient()', function(assert) {
+          var p1 = new Patient("Anne","Arnold");
+          var p2 = new Patient("Bernhard", "Bogus");
+          var p3 = new Patient("Carl", "Codemaster");
+          
+          var l = new WaitingList();
+          
+          l.pushPatient(p1);
+          l.pushPatient(p2);
+          l.pushPatient(p3);
+
+          //Test 1-6
+          l.shiftPatient();
+          assert.equal(l._waitingPatients[0].getName() + " " + l._waitingPatients[0].getSurname(), "Bernhard Bogus");
+          assert.equal(l._waitingPatients[1].getName() + " " + l._waitingPatients[1].getSurname(), "Carl Codemaster");
+          
+          l.shiftPatient();
+          assert.equal(l._waitingPatients[0].getName() + " " + l._waitingPatients[0].getSurname(), "Carl Codemaster");
+          
+          l.pushPatient(p2);
+          l.pushPatient(p1);
+          l.shiftPatient();
+          assert.equal(l._waitingPatients[0].getName() + " " + l._waitingPatients[0].getSurname(), "Bernhard Bogus");
+          assert.equal(l._waitingPatients[1].getName() + " " + l._waitingPatients[1].getSurname(), "Anne Arnold");
+          
+          l.shiftPatient();
+          assert.equal(l._waitingPatients[0].getName() + " " + l._waitingPatients[0].getSurname(), "Anne Arnold");
+        });
+    });
+
+  </script>
+
+
+</body>

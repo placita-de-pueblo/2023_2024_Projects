@@ -1,0 +1,46 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title>WZV 1.0</title>
+  <meta name="description" content="Wartezimmerverwaltung">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
+  <script type="text/javascript">
+    var ui;
+    function init() {
+      ui = new UI();
+    } 
+  </script>
+
+
+</head>
+
+<body onload="init()">
+  <h1>Wartezimmerverwaltung 1.0</h1>
+  <h2> Neuen Patienten hinzufügen</h2>
+  <form id="frm1" action="#">
+    Vorname: <input type="text" name="name"><br>
+    Nachname: <input type="text" name="surname"><br><br>
+    <input type="submit" onclick="ui.addNewPatient(); return false;" value="Patient eintragen">
+  </form>
+  
+  
+  <h2>Nächster Patient:</h2>
+  <p>Vorname: <span id="nextName"></span></p>
+  <p>Nachname: <span id="nextSurname"></span></p>
+  <input type="button" onclick="ui.callNextPatient(); return false" value="Nächsten Patienten aufrufen">
+  
+  <h2>Anzahl der Wartenden</h2>
+  <span id="numberOfWaitingPatients"></span>
+  
+  
+</body>
+
+</html>

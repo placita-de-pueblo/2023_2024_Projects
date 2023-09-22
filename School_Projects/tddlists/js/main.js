@@ -3,6 +3,15 @@ class Patient {
   constructor(name, surname) {
     this._name = name;
     this._surname = surname;
+    this._nextPatient = null;
+  }
+
+  setNextPatient(p){
+      this._nextPatient = p;
+  }
+
+  getNextPatient(){
+    return this._nextPatient;
   }
 
   getName() {
@@ -23,41 +32,44 @@ class Patient {
 class WaitingList {
   
   constructor() {
-    this._waitingPatients = [];  
+    this._firstPatient = null;
+    this._lastPatient = null;
     this._numberOfWaitingPatients = 0;
   }
   
   getNumberOfWaitingPatients() {
     return this._numberOfWaitingPatients;  
   }
-  
-  pushPatient(p) {
-    this._waitingPatients[this._numberOfWaitingPatients] = p;
-    this._numberOfWaitingPatients++;
-  }
-  
+
+	pushPatient(p){
+		if (this.getNumberOfWaitingPatients() == 0) {
+			this._firstPatient = p;
+			this._lastPatient = p;	
+		}	else {
+			this._lastPatient.setNextPatient(p);
+			this._lastPatient = p;
+		}
+			this._numberOfWaitingPatients++;
+		
+		
+	}
+
   shiftPatient() {
-    if (this._numberOfWaitingPatients == 0) {
-      return null;
-    } else {
-      let nextPatient = this._waitingPatients[0];
-      if (this._numberOfWaitingPatients == 1) {
-        this._waitingPatients=[];
-        this._numberOfWaitingPatients = 0;
-        return nextPatient;
-      } else {
-        for (let i = 0; i < this._numberOfWaitingPatients; i++) {
-          this._waitingPatients[i] = this._waitingPatients[i+1];
-        }
-        delete this._waitingPatients[this._numberOfWaitingPatients];
-        this._numberOfWaitingPatients--;
-        return nextPatient;
-      }
-    }
-  
-  }
-  
-  
+		if (this.getNumberOfWaitingPatients() == 1) {
+			this._numberOfWaitingPatients--;
+			return this._lastPatient;
+		}
+    else if (this.getNumberOfWaitingPatients() == 0) {
+			return null;
+		} 
+    else {
+			let p = this._firstPatient;
+			this._firstPatient  = p.getNextPatient();
+			this._numberOfWaitingPatients--;
+			return p;
+		}
+	}
+
 }
 
 
